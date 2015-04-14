@@ -26,7 +26,7 @@ soup = BeautifulSoup(html)
 pageLinks = soup.findAll('a')
 
 for pageLink in pageLinks:
-  href = pageLink.a['href']
+  href = pageLink['href']
   if '/payments-over-500/' in href:
   	# add the right prefix onto the url
   	pageUrl = href.replace("/democracy","http://www.croydon.gov.uk/democracy")
