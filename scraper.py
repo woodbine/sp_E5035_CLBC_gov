@@ -35,21 +35,17 @@ for pageLink in pageLinks:
   	
   	fileBlocks = soup2.findAll('a',{'class':'file-file'})
   	
-	  for fileBlock in fileBlocks:
-  		fileUrl = fileBlock['href']
-  		fileUrl = fileUrl.replace("/sites","http://www.croydon.gov.uk/sites")
-  		
-  		title = fileBlock.a.contents[0])
-			# create the right strings for the new filename
-			title = title.upper().strip()
-			csvYr = title.split(' ')[1]
-			csvMth = title.split(' ')[0][:3]
-			csvMth = convert_mth_strings(csvMth);
-		
-			filename = entity_id + "_" + csvYr + "_" + csvMth
-		
-			todays_date = str(datetime.now())
-		
-			scraperwiki.sqlite.save(unique_keys=['l'], data={"l": fileUrl, "f": filename, "d": todays_date })
-			
-			print filename
+	for fileBlock in fileBlocks:
+	  	fileUrl = fileBlock['href']
+	  	fileUrl = fileUrl.replace("/sites","http://www.croydon.gov.uk/sites")
+	  	title = fileBlock.a.contents[0])
+		# create the right strings for the new filename
+		title = title.upper().strip()
+		csvYr = title.split(' ')[1]
+		csvMth = title.split(' ')[0][:3]
+		csvMth = convert_mth_strings(csvMth);
+	
+		filename = entity_id + "_" + csvYr + "_" + csvMth
+		todays_date = str(datetime.now())
+		scraperwiki.sqlite.save(unique_keys=['l'], data={"l": fileUrl, "f": filename, "d": todays_date })
+		print filename
