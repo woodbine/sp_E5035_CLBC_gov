@@ -38,7 +38,7 @@ for pageLink in pageLinks:
 	for fileBlock in fileBlocks:
 	  	fileUrl = fileBlock['href']
 	  	fileUrl = fileUrl.replace("/sites","http://www.croydon.gov.uk/sites")
-	  	title = fileBlock.a.contents[0])
+	  	title = fileBlock.a.contents[0]
 		# create the right strings for the new filename
 		title = title.upper().strip()
 		csvYr = title.split(' ')[1]
