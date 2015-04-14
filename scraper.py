@@ -37,7 +37,6 @@ for pageLink in pageLinks:
   	
 	for fileBlock in fileBlocks:
 	  	fileUrl = fileBlock['href']
-	  	print fileUrl
 	  	fileUrl = fileUrl.replace("/sites","http://www.croydon.gov.uk/sites")
 	  	title = fileBlock.contents[0]
 		# create the right strings for the new filename
