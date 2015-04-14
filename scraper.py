@@ -27,7 +27,7 @@ pageLinks = soup.findAll('a')
 
 for pageLink in pageLinks:
   href = pageLink['href']
-  if '/payments-over-500/' in href:
+  if '/payments-over-500/20' in href:
   	# add the right prefix onto the url
   	pageUrl = href.replace("/democracy","http://www.croydon.gov.uk/democracy")
   	html2 = urllib2.urlopen(pageUrl)
