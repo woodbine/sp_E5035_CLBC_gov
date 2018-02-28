@@ -9,7 +9,8 @@ import urllib2
 from datetime import datetime
 from bs4 import BeautifulSoup
 
-#### FUNCTIONS 1.0
+#### FUNCTIONS 1.1
+import requests
 
 def validateFilename(filename):
     filenameregex = '^[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[0-9][0-9][0-9][0-9]_[0-9QY][0-9]$'
@@ -90,35 +91,36 @@ data = []
 
 #### READ HTML 1.0
 
-html = urllib2.urlopen(url)
-soup = BeautifulSoup(html, 'lxml')
+# html = urllib2.urlopen(url)
+html = requests.get(url, verify=False)
+soup = BeautifulSoup(html.text, 'lxml')
 
 
 #### SCRAPE DATA
 
-pageLinks = soup.findAll('a')
-
+pageLinks = soup.find('div', 'block multipart').findAll('a')
 for pageLink in pageLinks:
   href = pageLink['href']
   if '/payments-over-500/20' in href or '/payments-over-500/p' in href:
         pageUrl = href.replace("/democracy","http://www.croydon.gov.uk/democracy")
-        html2 = urllib2.urlopen(pageUrl)
-        soup2 = BeautifulSoup(html2, 'lxml')
-        fileBlocks = soup2.find('ul', 'field-items').findAll('a')
-        links = {}
-        for fileBlock in fileBlocks:
-            fileUrl = fileBlock['href']
-            fileUrl = fileUrl.replace("/sites","http://www.croydon.gov.uk/sites")
-            title = fileBlock.contents[0]
-            if 'Purchase' not in title and ('.xlsx' in fileUrl or '.xls' in fileUrl or '.pdf' in fileUrl or '.csv' in fileUrl):
-                title = title.upper().strip()
-                links.update({title: fileUrl})
-
-        for key, value in links.iteritems():
-            csvYr = key.split(' ')[1]
-            csvMth = key.split(' ')[0][:3]
-            csvMth = convert_mth_strings(csvMth.upper())
-            data.append([csvYr, csvMth, value])
+        html2 = requests.get(pageUrl, verify=False)
+        soup2 = BeautifulSoup(html2.text, 'lxml')
+        fileBlock = soup2.find('h2', text="Downloads")
+        if fileBlock:
+            fileBlocks = fileBlock.find_next('ul', 'field-items').findAll('a')
+            links = {}
+            for fileBlck in fileBlocks:
+                fileUrl = fileBlck['href']
+                fileUrl = fileUrl.replace("/sites","http://www.croydon.gov.uk/sites")
+                title = fileBlck.contents[0]
+                if 'Purchase' not in title and ('.xlsx' in fileUrl or '.xls' in fileUrl or '.pdf' in fileUrl or '.csv' in fileUrl):
+                    title = title.upper().strip()
+                    links.update({title: fileUrl})
+            for key, value in links.iteritems():
+                csvYr = key.split(' ')[1]
+                csvMth = key.split(' ')[0][:3]
+                csvMth = convert_mth_strings(csvMth.upper())
+                data.append([csvYr, csvMth, value])
 
 #### STORE DATA 1.0
 
